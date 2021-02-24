@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@CrossOrigin(origins = "https://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value="/candidates", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CandidateController {
@@ -48,13 +48,11 @@ public class CandidateController {
     }
 
     @RequestMapping(value = "/search", method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Page<CandidateDTO>> searchCandidates(@RequestBody SearchParamsDTO searchParamsDTO, Pageable pageable){
+    public ResponseEntity<List<CandidateDTO>> searchCandidates(@RequestBody SearchParamsDTO searchParamsDTO){
 
-        Page<Candidate> page = candidateService.searchCandidates(searchParamsDTO, pageable);
-        List<CandidateDTO> dtos = toCandidateDTOList(page.toList());
-        Page<CandidateDTO> pageCandidateDTOS = new PageImpl<>(dtos,page.getPageable(), page.getTotalElements());
+        List<Candidate> candidates = candidateService.searchCandidates(searchParamsDTO);
 
-        return new ResponseEntity<>(pageCandidateDTOS, HttpStatus.OK);
+        return new ResponseEntity<>(toCandidateDTOList(candidates), HttpStatus.OK);
     }
 
     @RequestMapping(method= RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -80,22 +78,20 @@ public class CandidateController {
     }
 
     @RequestMapping(value = "/{id}", method= RequestMethod.DELETE)
-    public ResponseEntity<String> deleteCandidate(@PathVariable Integer id){
+    public ResponseEntity<?> deleteCandidate(@PathVariable Integer id){
 
         if(candidateService.delete(id)) {
-            return new ResponseEntity<String>("Successfully deleted candidate!", HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         }else {
-            return new ResponseEntity<String>("Deleting failed!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
-    @RequestMapping(value= "/by-page",method = RequestMethod.GET)
-    public ResponseEntity<Page<CandidateDTO>> getCandidates(Pageable pageable) {
-        Page<Candidate> page = candidateService.findAll(pageable);
-        List<CandidateDTO> dtos = toCandidateDTOList(page.toList());
-        Page<CandidateDTO> pageCandidateDTOS = new PageImpl<>(dtos,page.getPageable(), page.getTotalElements());
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<List<CandidateDTO>> getCandidates() {
+        List<Candidate> list = candidateService.findAll();
 
-        return new ResponseEntity<>(pageCandidateDTOS, HttpStatus.OK);
+        return new ResponseEntity<>(toCandidateDTOList(list), HttpStatus.OK);
     }
 
     @RequestMapping(value= "/by-id/{id}",method = RequestMethod.GET)

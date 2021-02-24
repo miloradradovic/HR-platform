@@ -1,1 +1,21 @@
-<p>add-skill-page works!</p>
+<h1 class="mat-display-1;" style="text-align: center;  margin-top: 1%;">Add new skill</h1>
+
+<div style="display: block; text-align: center; margin: 10%;">
+  <br>
+  <form (submit)="addNewSkill()" [formGroup]="form" style="display: inline-block; width: 100%">
+    <div>
+      <mat-form-field>
+        <mat-label for="skillNameInput">Skill name: </mat-label>
+        <input matInput id="skillNameInput" name="skillNameInput" placeholder="skill name" [formControl]="form.controls.skillNameInput">
+        <mat-error *ngIf="form.controls.skillNameInput.touched && form.controls.skillNameInput.errors?.required">
+          This field can't be empty!</mat-error >
+      </mat-form-field>
+    </div>
+
+    <div>
+      <button mat-raised-button type="submit" id="add-new-skill-button" [disabled]="!form.valid">Add new skill</button>
+      <br><br>
+
+    </div>
+  </form>
+</div>

@@ -1,5 +1,6 @@
 package com.project.intensinternship.service;
 
+import com.project.intensinternship.model.Candidate;
 import com.project.intensinternship.model.Skill;
 import com.project.intensinternship.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -15,6 +17,9 @@ public class SkillService implements ServiceInterface<Skill> {
 
     @Autowired
     SkillRepository skillRepository;
+
+    @Autowired
+    CandidateService candidateService;
 
     public Set<Skill> getSkills(Set<Skill> skillSet) {
         Set<Skill> newSkills = new HashSet<>();
@@ -30,8 +35,8 @@ public class SkillService implements ServiceInterface<Skill> {
     }
 
     @Override
-    public Page<Skill> findAll(Pageable pageable) {
-        return skillRepository.findAll(pageable);
+    public List<Skill> findAll() {
+        return skillRepository.findAll();
     }
 
     @Override
@@ -51,7 +56,23 @@ public class SkillService implements ServiceInterface<Skill> {
 
     @Override
     public boolean delete(int id) {
-        return false;
+        Skill found = skillRepository.findById(id).orElse(null);
+        if(found == null){
+            return false;
+        }else{
+            for(Candidate candidate : found.getCandidateSet()){
+                Candidate candidateSet = candidateService.findOne(candidate.getId());
+                for(Skill s : candidateSet.getSkillSet()){
+                    if(s.getId() == id){
+                        candidateSet.getSkillSet().remove(s);
+                        candidateService.update(candidateSet);
+                        break;
+                    }
+                }
+            }
+            skillRepository.delete(found);
+            return true;
+        }
     }
 
     @Override
@@ -59,7 +80,7 @@ public class SkillService implements ServiceInterface<Skill> {
         return null;
     }
 
-    public Page<Skill> findByCandidate(Integer id, Pageable pageable) {
-        return skillRepository.findByCandidate(id, pageable);
+    public List<Skill> findByCandidate(Integer id) {
+        return skillRepository.findByCandidate(id);
     }
 }

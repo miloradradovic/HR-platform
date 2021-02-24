@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin(origins = "https://localhost:4200")
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping(value="/skills", produces = MediaType.APPLICATION_JSON_VALUE)
 public class SkillController {
@@ -44,15 +44,34 @@ public class SkillController {
         }
     }
 
-    @RequestMapping(value= "/by-candidate/{id}/by-page",method = RequestMethod.GET)
-    public ResponseEntity<Page<SkillDTO>> getSkillsByCandidate(@PathVariable Integer id, Pageable pageable) {
+    @RequestMapping(value= "/by-candidate/{id}",method = RequestMethod.GET)
+    public ResponseEntity<List<SkillDTO>> getSkillsByCandidate(@PathVariable Integer id) {
 
-        Page<Skill> page = skillService.findByCandidate(id, pageable);
-        List<SkillDTO> dtos = toSkillDTOList(page.toList());
-        Page<SkillDTO> pageSkillDTOS = new PageImpl<>(dtos,page.getPageable(), page.getTotalElements());
+        List<Skill> list = skillService.findByCandidate(id);
 
-        return new ResponseEntity<>(pageSkillDTOS, HttpStatus.OK);
+        return new ResponseEntity<>(toSkillDTOList(list), HttpStatus.OK);
     }
+
+    @RequestMapping(value= "/{id}",method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteSkill(@PathVariable Integer id) {
+
+        if(skillService.delete(id)){
+            return new ResponseEntity<>(HttpStatus.OK);
+        }else{
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public ResponseEntity<ArrayList<SkillDTO>> getAllSkills() {
+
+        List<Skill> skills = skillService.findAll();
+        ArrayList<SkillDTO> dtos = (ArrayList<SkillDTO>) toSkillDTOList(skills);
+
+        return new ResponseEntity<>(dtos, HttpStatus.OK);
+    }
+
+
 
     private List<SkillDTO> toSkillDTOList(List<Skill> toList) {
         ArrayList<SkillDTO> dtos = new ArrayList<SkillDTO>();

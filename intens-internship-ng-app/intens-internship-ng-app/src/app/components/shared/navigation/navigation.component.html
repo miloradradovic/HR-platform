@@ -1,0 +1,21 @@
+<mat-toolbar color="primary">
+
+  <a routerLink="/" id="home-nav" style="margin-left: 0.1%;" ><mat-icon [ngStyle]="{'color':'white'}">work</mat-icon></a>
+  <span style="margin-left: 1%">HR department</span>
+
+  <span style="padding-left:3%" class="example-spacer"> </span>
+
+
+  <button mat-button [matMenuTriggerFor]="candidateMenu" id="candidateMenu">Manage Candidates</button>
+  <mat-menu #candidateMenu="matMenu">
+    <a routerLink="/add-candidate" style="margin-left: 5%;" ><button style="width: 90%;margin-bottom: 5%"mat-flat-button color="primary" id="add-candidate-navigate">Add New Candidate</button></a>
+    <a routerLink="/" style="margin-left: 5%;" ><button mat-flat-button style="width: 90%;margin-bottom: 5%" color="primary" id="all-candidates-navigate">Candidates Dashboard</button></a>
+  </mat-menu>
+
+  <button mat-button [matMenuTriggerFor]="skillMenu" id="skillMenu">Manage Skills</button>
+  <mat-menu #skillMenu="matMenu">
+    <a routerLink="/add-skill" style="margin-left: 5%;" ><button style="width: 90%;margin-bottom: 5%" mat-flat-button color="primary" id="add-skill-navigate">Add New Skill</button></a>
+    <a routerLink="/skills" style="margin-left: 5%;" ><button style="width: 90%;margin-bottom: 5%" mat-flat-button color="primary" id="all-skills-navigate">Skills Dashboard</button></a>
+  </mat-menu>
+
+</mat-toolbar>

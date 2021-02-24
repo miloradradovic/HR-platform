@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ServiceInterface<T> {
 
-    Page<T> findAll(Pageable pageable);
+    List<T> findAll();
 
     T findOne(int id);
 

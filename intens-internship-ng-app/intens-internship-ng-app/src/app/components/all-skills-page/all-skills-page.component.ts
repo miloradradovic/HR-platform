@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import {SkillService} from '../../services/skill-service/skill.service';
 
 @Component({
   selector: 'app-all-skills-page',
@@ -7,9 +9,37 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AllSkillsPageComponent implements OnInit {
 
-  constructor() { }
+  skills = [];
+
+  constructor(private snackBar: MatSnackBar,
+              private skillService: SkillService) { }
 
   ngOnInit(): void {
+    this.skillService.getAllSkills().subscribe(
+      result => {
+        this.skills = result;
+      },
+      error => {
+        this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
+      }
+    );
   }
 
+  onDelete($event: number) {
+    this.skillService.deleteSkill($event).subscribe(
+      result => {
+        this.snackBar.open('Successfully deleted!', 'Ok', {duration: 2000});
+        const newList = [];
+        this.skills.forEach((item, index) => {
+          if (item.id !== $event){
+            newList.push(item);
+          }
+        });
+        this.skills = newList;
+      },
+      error => {
+
+      }
+    );
+  }
 }

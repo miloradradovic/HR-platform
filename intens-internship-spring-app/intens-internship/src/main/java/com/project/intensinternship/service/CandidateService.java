@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -20,10 +21,9 @@ public class CandidateService implements ServiceInterface<Candidate> {
     @Autowired
     SkillService skillService;
 
-
     @Override
-    public Page<Candidate> findAll(Pageable pageable) {
-        return candidateRepository.findAll(pageable);
+    public List<Candidate> findAll() {
+        return candidateRepository.findAll();
     }
 
     @Override
@@ -36,6 +36,13 @@ public class CandidateService implements ServiceInterface<Candidate> {
         if(candidateRepository.findByEmail(entity.getEmail()) == null){
             Set<Skill> skills = skillService.getSkills(entity.getSkillSet());
             entity.setSkillSet(skills);
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+            try{
+                Date newDate = formatter.parse(formatter.format(entity.getDateOfBirth()));
+                entity.setDateOfBirth(newDate);
+            }catch(Exception e){
+                e.printStackTrace();
+            }
             return candidateRepository.save(entity);
         }else{
             return null;
@@ -66,20 +73,53 @@ public class CandidateService implements ServiceInterface<Candidate> {
         }
     }
 
-    public Page<Candidate> searchCandidates(SearchParamsDTO searchParamsDTO, Pageable pageable){
+    public List<Candidate> searchCandidates(SearchParamsDTO searchParamsDTO){
         if(searchParamsDTO.getParam().equals("name")){
-            Page<Candidate> candidates = candidateRepository.searchByName(searchParamsDTO.getValue(), pageable);
-            return candidates;
+            return candidateRepository.searchByName(searchParamsDTO.getValue());
         }else{
             String[] splitted = searchParamsDTO.getValue().split(",");
             if(splitted.length == 1){ // search by one
-                Page<Candidate> candidates = candidateRepository.searchByOneSkill(searchParamsDTO.getValue(), pageable);
-                return candidates;
+                return candidateRepository.searchByOneSkill(searchParamsDTO.getValue());
             }else{
-                Page<Candidate> candidates = candidateRepository.searchByMoreSkills(Arrays.asList(splitted), pageable);
-                return candidates;
+                List<Candidate> searchResult = new ArrayList<>();
+                for(String skillName : splitted){
+                    if (searchResult.size() == 0){
+                        searchResult = candidateRepository.searchByOneSkill(skillName);
+                    }else{
+                        searchResult = searchLogicalAnd(searchResult, candidateRepository.searchByOneSkill(skillName));
+                    }
+                }
+                return searchResult;
             }
         }
+    }
+
+    private List<Candidate> searchLogicalAnd(List<Candidate> searchResult, List<Candidate> searchByOneSkill) {
+        List<Candidate> finalResult = new ArrayList<>();
+        if (searchByOneSkill.size() < searchResult.size()){
+            for (Candidate candidate : searchByOneSkill){
+                if (candidateInTheList(searchResult, candidate)){
+                    finalResult.add(candidate);
+                }
+            }
+            return finalResult;
+        }else{
+            for (Candidate candidate : searchResult){
+                if (candidateInTheList(searchByOneSkill, candidate)){
+                    finalResult.add(candidate);
+                }
+            }
+            return finalResult;
+        }
+    }
+
+    private boolean candidateInTheList(List<Candidate> list, Candidate candidate) {
+        for(Candidate c : list){
+            if(c.getId() == candidate.getId()){
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean removeSkill(Integer candidateId, Integer skillId) {

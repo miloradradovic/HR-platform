@@ -1,1 +1,6 @@
-<p>all-skills-page works!</p>
+<div style="padding-left:30%;float: left;padding-top: 2%;width:40%">
+  <h1 style="width:100%;font-size: xx-large">Skills Dashboard</h1>
+  <app-table (Delete)="onDelete($event)" [dataSource]="skills" [columnsToDisplay]="['Id', 'Name', 'Delete']"
+             [columnsToIterate]="['id', 'name']"></app-table>
+
+</div>
