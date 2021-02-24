@@ -1,1 +1,70 @@
-<p>detailed-candidate-page works!</p>
+<h1 class="mat-display-1;" style="text-align: center;  margin-top: 1%;">Candidate info</h1>
+<br><br>
+<div style="float: left; margin-left: 1%; font-size: medium">
+
+  <mat-label>Candidate info</mat-label>
+
+  <form  [formGroup]="form" style="padding-left: 25px;">
+
+    <mat-form-field>
+      <mat-label for="fullNameInput">Full name:</mat-label>
+      <input readonly matInput id="fullNameInput" name="fullNameInput" placeholder="full name" [formControl]="form.controls.fullNameInput">
+      <mat-error *ngIf="form.controls.fullNameInput.touched && form.controls.fullNameInput.errors?.required">
+        This field can't be empty!</mat-error >
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label for="emailInput">Email:</mat-label>
+      <input readonly matInput id="emailInput" name="emailInput" placeholder="email" [formControl]="form.controls.emailInput">
+      <mat-error *ngIf="form.controls.emailInput.touched && form.controls.emailInput.errors?.required">
+        This field can't be empty!</mat-error >
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label for="contactNumberInput">Contact number:</mat-label>
+      <input readonly matInput id="contactNumberInput" name="contactNumberInput" placeholder="Your contact number" [formControl]="form.controls.contactNumberInput">
+      <mat-error *ngIf="form.controls.contactNumberInput.touched && form.controls.contactNumberInput.errors?.required">
+        This field can't be empty!</mat-error >
+    </mat-form-field>
+    <br>
+    <mat-form-field>
+      <mat-label>Date of birth:</mat-label>
+      <input readonly id="dateInput" [formControl]="form.controls.dateInput"
+             matInput [matDatepicker]="picker" [max]="years18">
+      <mat-datepicker-toggle disabled matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <br>
+
+  </form>
+
+  <br><br><br><br>
+
+  <div>
+
+    <mat-label>Add skill to candidate</mat-label>
+
+    <form class="example-form">
+      <mat-form-field class="example-full-width">
+        <mat-label>Skill name</mat-label>
+        <input type="text"
+               placeholder="Skill name"
+               aria-label="Skill name"
+               matInput
+               [formControl]="myControl"
+               [matAutocomplete]="auto">
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+            {{option}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+      <button id="addSkill" mat-raised-button (click)="addSkill()">Add and save</button>
+    </form>
+  </div>
+
+</div>
+<div style="width: 50%; height: 50%; float: right; padding-right: 10%">
+  <app-table [dataSource]="skills" [columnsToDisplay]="['Name', 'Delete']" [columnsToIterate]="['name']" (Delete)="onDelete($event)"></app-table>
+</div>

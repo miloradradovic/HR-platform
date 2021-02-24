@@ -21,6 +21,7 @@ export class AddCandidatePageComponent implements OnInit {
   skills = [];
   skillsBackend = [];
   years18: Date;
+  idNew = 0;
 
   constructor(public snackBar: MatSnackBar,
               public fb: FormBuilder,
@@ -96,12 +97,14 @@ export class AddCandidatePageComponent implements OnInit {
   onDelete($event: number): void {
     const newList = [];
     let skill;
-    if ($event === -1){
+    if ($event < 0){
+      console.log(this.skills);
       this.skills.forEach((item, index) => {
         if (item.id !== $event){
           newList.push(item);
         }
       });
+      console.log(newList);
       this.skills = newList;
     }else{
       this.skillsBackend.forEach((item, index) => {
@@ -141,7 +144,8 @@ export class AddCandidatePageComponent implements OnInit {
           }
         });
         if (found === false){
-          newList.push({id: -1, name: this.myControl.value});
+          this.idNew = this.idNew - 1;
+          newList.push({id: this.idNew, name: this.myControl.value});
         }
         this.skills = newList;
         const newOptions = [];

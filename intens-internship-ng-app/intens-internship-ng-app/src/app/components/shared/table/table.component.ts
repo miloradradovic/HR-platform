@@ -50,7 +50,7 @@ export class TableComponent implements OnInit, OnChanges {
     this.DoubleClick.emit(id);
   }
 
-  delete(id) {
+  delete(id): void {
     this.Delete.emit(id);
   }
 }
