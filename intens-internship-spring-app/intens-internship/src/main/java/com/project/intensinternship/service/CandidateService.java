@@ -124,10 +124,11 @@ public class CandidateService implements ServiceInterface<Candidate> {
 
     public boolean removeSkill(Integer candidateId, Integer skillId) {
         Candidate found = candidateRepository.findById(candidateId).orElse(null);
-        int sizeBefore = found.getSkillSet().size();
+        int sizeBefore;
         if(found == null){
             return false;
         }else{
+            sizeBefore = found.getSkillSet().size();
             for(Skill skill : found.getSkillSet()){
                 if(skill.getId() == skillId){
                     found.getSkillSet().remove(skill);
