@@ -29,22 +29,12 @@
     <br>
     <mat-form-field>
       <mat-label>Date of birth:</mat-label>
-      <input id="dateInput" [formControl]="form.controls.dateInput"
+      <input [readonly]="true" id="dateInput" [formControl]="form.controls.dateInput"
              matInput [matDatepicker]="picker" [max]="years18">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-
-
-    <br>
-    <button id="addCandidateButton" mat-raised-button type="submit">Add candidate</button>
-
-  </form>
-
-  <br><br><br><br>
-
-  <div>
-
+    <br><br>
     <mat-label>Add skill to candidate</mat-label>
 
     <form class="example-form">
@@ -64,7 +54,12 @@
       </mat-form-field>
       <button id="addSkill" mat-raised-button (click)="addSkill()">Add skill</button>
     </form>
-  </div>
+
+
+    <br>
+    <button id="addCandidateButton" mat-raised-button type="submit">Add candidate</button>
+
+  </form>
 
 </div>
 <div style="width: 50%; height: 50%; float: right; padding-right: 10%">
