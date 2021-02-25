@@ -7,16 +7,12 @@ import com.project.intensinternship.mappers.CandidateMapper;
 import com.project.intensinternship.model.Candidate;
 import com.project.intensinternship.service.CandidateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -52,13 +48,25 @@ public class CandidateController {
 
         List<Candidate> candidates = candidateService.searchCandidates(searchParamsDTO);
 
-        return new ResponseEntity<>(toCandidateDTOList(candidates), HttpStatus.OK);
+        return new ResponseEntity<>(this.candidateMapper.toListDtos(candidates), HttpStatus.OK);
     }
 
     @RequestMapping(method= RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<CandidateDTO> updateCandidate(@RequestBody CandidateDTO candidateDTO){
 
         Candidate candidate = candidateService.update(candidateMapper.toEntity(candidateDTO));
+        if(candidate != null) {
+            candidateDTO.setId(candidate.getId());
+            return new ResponseEntity<>(candidateDTO, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @RequestMapping(value = "/skills", method= RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CandidateDTO> updateCandidateWithSkill(@RequestBody CandidateDTO candidateDTO){
+
+        Candidate candidate = candidateService.updateSkills(candidateMapper.toEntity(candidateDTO));
         if(candidate != null) {
             candidateDTO.setId(candidate.getId());
             return new ResponseEntity<>(candidateDTO, HttpStatus.OK);
@@ -91,7 +99,7 @@ public class CandidateController {
     public ResponseEntity<List<CandidateDTO>> getCandidates() {
         List<Candidate> list = candidateService.findAll();
 
-        return new ResponseEntity<>(toCandidateDTOList(list), HttpStatus.OK);
+        return new ResponseEntity<>(this.candidateMapper.toListDtos(list), HttpStatus.OK);
     }
 
     @RequestMapping(value= "/by-id/{id}",method = RequestMethod.GET)
@@ -102,14 +110,5 @@ public class CandidateController {
         }else{
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-    }
-
-    private List<CandidateDTO> toCandidateDTOList(List<Candidate> toList) {
-        ArrayList<CandidateDTO> dtos = new ArrayList<CandidateDTO>();
-        for(Candidate candidate : toList) {
-            CandidateDTO dto = candidateMapper.toDto(candidate);
-            dtos.add(dto);
-        }
-        return dtos;
     }
 }

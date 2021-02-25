@@ -49,7 +49,7 @@ public class SkillController {
 
         List<Skill> list = skillService.findByCandidate(id);
 
-        return new ResponseEntity<>(toSkillDTOList(list), HttpStatus.OK);
+        return new ResponseEntity<>(this.skillMapper.toListDtos(list), HttpStatus.OK);
     }
 
     @RequestMapping(value= "/{id}",method = RequestMethod.DELETE)
@@ -66,19 +66,8 @@ public class SkillController {
     public ResponseEntity<ArrayList<SkillDTO>> getAllSkills() {
 
         List<Skill> skills = skillService.findAll();
-        ArrayList<SkillDTO> dtos = (ArrayList<SkillDTO>) toSkillDTOList(skills);
+        ArrayList<SkillDTO> dtos = (ArrayList<SkillDTO>) this.skillMapper.toListDtos(skills);
 
         return new ResponseEntity<>(dtos, HttpStatus.OK);
-    }
-
-
-
-    private List<SkillDTO> toSkillDTOList(List<Skill> toList) {
-        ArrayList<SkillDTO> dtos = new ArrayList<SkillDTO>();
-        for(Skill skill : toList) {
-            SkillDTO dto = skillMapper.toDto(skill);
-            dtos.add(dto);
-        }
-        return dtos;
     }
 }

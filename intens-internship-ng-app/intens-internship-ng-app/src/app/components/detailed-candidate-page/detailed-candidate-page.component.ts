@@ -67,9 +67,52 @@ export class DetailedCandidatePageComponent implements OnInit {
               });
             });
             this.skills = skillList;
-            console.log(this.skills);
-            console.log(this.skillsBackend);
-            console.log(this.candidate);
+            this.skillsBackend.forEach((item, index) => {
+              let check = false;
+              this.skills.forEach((item2, index2) => {
+                if (item2.id === item.id){
+                  check = true;
+                }
+              });
+              if (check === false){
+                this.options.push(item.name);
+              }
+            });
+            this.filteredOptions = this.myControl.valueChanges
+              .pipe(
+                startWith(''),
+                map(value => this._filter(value))
+              );
+          },
+          error => {
+            this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
+          }
+        );
+      },
+      error => {
+        this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
+      }
+    );
+  }
+
+  private resetData(): void {
+    this.skillService.getAllSkills().subscribe(
+      result => {
+        this.skillsBackend = result; // all skills
+
+        this.candidateService.getCandidateById(this.idPassed).subscribe(
+          result2 => {
+            this.candidate = result2; // candidate found by id
+            const skillList = [];
+            this.candidate.skills.forEach((item, index) => {
+              this.skillsBackend.forEach((item2, index2) => {
+                if (item2.name === item){
+                  const skillObj = {id: item2.id, name: item2.name};
+                  skillList.push(skillObj);
+                }
+              });
+            });
+            this.skills = skillList;
             this.skillsBackend.forEach((item, index) => {
               let check = false;
               this.skills.forEach((item2, index2) => {
@@ -133,9 +176,9 @@ export class DetailedCandidatePageComponent implements OnInit {
         });
         this.candidate.skills = skillListNames;
         this.options = [];
-        this.candidateService.updateCandidate(this.candidate).subscribe(
+        this.candidateService.updateCandidateWithSkill(this.candidate).subscribe(
           result => {
-            this.setupData();
+            this.resetData();
           },
           error => {
             this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
@@ -163,7 +206,28 @@ export class DetailedCandidatePageComponent implements OnInit {
     this.options = [];
     this.candidateService.removeSkillFromCandidate(this.idPassed, skill.id).subscribe(
       result => {
-        this.setupData();
+        this.resetData();
+      },
+      error => {
+        this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
+      }
+    );
+  }
+
+  updateCandidate(): void {
+    this.candidate.fullName = this.form.value.fullNameInput;
+    this.candidate.email = this.form.value.emailInput;
+    this.candidate.contactNumber = this.form.value.contactNumberInput;
+    this.candidate.dateOfBirth = this.form.value.dateInput;
+    const skillListNames = [];
+    this.skills.forEach((item, index) => {
+      skillListNames.push(item.name);
+    });
+    this.candidate.skills = skillListNames;
+    this.candidateService.updateCandidate(this.candidate).subscribe(
+      result => {
+        this.snackBar.open('Update was successfull!', 'Ok', {duration: 2000});
+        this.router.navigate(['/']);
       },
       error => {
         this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});

@@ -44,23 +44,30 @@ export class AddCandidatePageComponent implements OnInit {
     this.years18.setMonth(today.getMonth());
     this.years18.setFullYear(today.getFullYear() - 18);
 
+    this.setupData();
+  }
 
+  private setupData(): void{
     this.skillService.getAllSkills().subscribe(
       result => {
         this.skillsBackend = result;
         result.forEach((item, index) => {
           this.options.push(item.name);
         });
-        this.filteredOptions = this.myControl.valueChanges
-          .pipe(
-            startWith(''),
-            map(value => this._filter(value))
-          );
+        this.setupOptions();
       },
       error => {
         this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
       }
     );
+  }
+
+  private setupOptions(): void{
+    this.filteredOptions = this.myControl.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
   }
 
   private _filter(value: string): string[] {
@@ -98,18 +105,17 @@ export class AddCandidatePageComponent implements OnInit {
     const newList = [];
     let skill;
     if ($event < 0){
-      console.log(this.skills);
       this.skills.forEach((item, index) => {
         if (item.id !== $event){
           newList.push(item);
         }
       });
-      console.log(newList);
       this.skills = newList;
     }else{
       this.skillsBackend.forEach((item, index) => {
         if (item.id === $event){
           skill = item;
+          console.log(skill);
         }
       });
       this.skills.forEach((item, index) => {
@@ -122,6 +128,7 @@ export class AddCandidatePageComponent implements OnInit {
       const newOptions = this.options;
       newOptions.push(skill.name);
       this.options = newOptions;
+      this.setupOptions();
     }
   }
 

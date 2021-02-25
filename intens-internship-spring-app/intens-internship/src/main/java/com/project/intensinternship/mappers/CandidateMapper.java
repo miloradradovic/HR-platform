@@ -4,7 +4,9 @@ import com.project.intensinternship.dto.CandidateDTO;
 import com.project.intensinternship.model.Candidate;
 import com.project.intensinternship.model.Skill;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class CandidateMapper implements MapperInterface<Candidate, CandidateDTO> {
     @Override
@@ -25,5 +27,15 @@ public class CandidateMapper implements MapperInterface<Candidate, CandidateDTO>
             candidateDTO.getSkills().add(skill.getName());
         }
         return candidateDTO;
+    }
+
+    @Override
+    public List<CandidateDTO> toListDtos(List<Candidate> entities) {
+        ArrayList<CandidateDTO> dtos = new ArrayList<CandidateDTO>();
+        for(Candidate candidate : entities) {
+            CandidateDTO dto = this.toDto(candidate);
+            dtos.add(dto);
+        }
+        return dtos;
     }
 }

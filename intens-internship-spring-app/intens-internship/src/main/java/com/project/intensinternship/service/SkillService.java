@@ -4,8 +4,6 @@ import com.project.intensinternship.model.Candidate;
 import com.project.intensinternship.model.Skill;
 import com.project.intensinternship.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;

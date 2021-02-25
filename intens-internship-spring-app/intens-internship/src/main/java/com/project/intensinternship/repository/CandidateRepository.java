@@ -13,6 +13,8 @@ import java.util.List;
 @Repository
 public interface CandidateRepository extends JpaRepository<Candidate, Integer> {
 
+    Candidate findById(int id);
+
     Candidate findByEmail(String email);
 
     @Query(value = "SELECT * from candidates where upper(full_name) LIKE upper(CONCAT('%', :value, '%'))", nativeQuery = true)
@@ -23,4 +25,6 @@ public interface CandidateRepository extends JpaRepository<Candidate, Integer> {
 
     @Query(value = "SELECT distinct * from candidates where candidates.id in (SELECT candidate_id from candidate_skill where skill_id in (SELECT id from skills where name in :splitted))", nativeQuery = true)
     List<Candidate> searchByMoreSkills(Collection<String> splitted);
+
+    Candidate findByContactNumber(String contactNumber);
 }

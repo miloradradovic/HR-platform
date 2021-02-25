@@ -8,41 +8,33 @@
 
     <mat-form-field>
       <mat-label for="fullNameInput">Full name:</mat-label>
-      <input readonly matInput id="fullNameInput" name="fullNameInput" placeholder="full name" [formControl]="form.controls.fullNameInput">
+      <input matInput id="fullNameInput" name="fullNameInput" placeholder="full name" [formControl]="form.controls.fullNameInput">
       <mat-error *ngIf="form.controls.fullNameInput.touched && form.controls.fullNameInput.errors?.required">
         This field can't be empty!</mat-error >
     </mat-form-field>
     <br>
     <mat-form-field>
       <mat-label for="emailInput">Email:</mat-label>
-      <input readonly matInput id="emailInput" name="emailInput" placeholder="email" [formControl]="form.controls.emailInput">
+      <input matInput id="emailInput" name="emailInput" placeholder="email" [formControl]="form.controls.emailInput">
       <mat-error *ngIf="form.controls.emailInput.touched && form.controls.emailInput.errors?.required">
         This field can't be empty!</mat-error >
     </mat-form-field>
     <br>
     <mat-form-field>
       <mat-label for="contactNumberInput">Contact number:</mat-label>
-      <input readonly matInput id="contactNumberInput" name="contactNumberInput" placeholder="Your contact number" [formControl]="form.controls.contactNumberInput">
+      <input matInput id="contactNumberInput" name="contactNumberInput" placeholder="Your contact number" [formControl]="form.controls.contactNumberInput">
       <mat-error *ngIf="form.controls.contactNumberInput.touched && form.controls.contactNumberInput.errors?.required">
         This field can't be empty!</mat-error >
     </mat-form-field>
     <br>
     <mat-form-field>
       <mat-label>Date of birth:</mat-label>
-      <input readonly id="dateInput" [formControl]="form.controls.dateInput"
+      <input [readonly]="true" id="dateInput" [formControl]="form.controls.dateInput"
              matInput [matDatepicker]="picker" [max]="years18">
-      <mat-datepicker-toggle disabled matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-
-    <br>
-
-  </form>
-
-  <br><br><br><br>
-
-  <div>
-
+    <br><br>
     <mat-label>Add skill to candidate</mat-label>
 
     <form class="example-form">
@@ -60,9 +52,12 @@
           </mat-option>
         </mat-autocomplete>
       </mat-form-field>
-      <button id="addSkill" mat-raised-button (click)="addSkill()">Add and save</button>
+      <button id="addSkill" mat-raised-button (click)="addSkill()">Add skill</button>
     </form>
-  </div>
+
+    <br>
+    <button id="addCandidateButton" mat-raised-button (click)="updateCandidate()">Save all changes</button>
+  </form>
 
 </div>
 <div style="width: 50%; height: 50%; float: right; padding-right: 10%">

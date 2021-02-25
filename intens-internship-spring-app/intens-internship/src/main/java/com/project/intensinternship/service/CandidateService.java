@@ -28,12 +28,12 @@ public class CandidateService implements ServiceInterface<Candidate> {
 
     @Override
     public Candidate findOne(int id) {
-        return candidateRepository.findById(id).orElse(null);
+        return candidateRepository.findById(id);
     }
 
     @Override
     public Candidate saveOne(Candidate entity) {
-        if(candidateRepository.findByEmail(entity.getEmail()) == null){
+        if(candidateRepository.findByEmail(entity.getEmail()) == null && candidateRepository.findByContactNumber(entity.getContactNumber()) == null){
             Set<Skill> skills = skillService.getSkills(entity.getSkillSet());
             entity.setSkillSet(skills);
             SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
@@ -41,7 +41,7 @@ public class CandidateService implements ServiceInterface<Candidate> {
                 Date newDate = formatter.parse(formatter.format(entity.getDateOfBirth()));
                 entity.setDateOfBirth(newDate);
             }catch(Exception e){
-                e.printStackTrace();
+                return null;
             }
             return candidateRepository.save(entity);
         }else{
@@ -51,7 +51,7 @@ public class CandidateService implements ServiceInterface<Candidate> {
 
     @Override
     public boolean delete(int id) {
-        Candidate candidate = candidateRepository.findById(id).orElse(null);
+        Candidate candidate = candidateRepository.findById(id);
         if(candidate == null){
             return false;
         }else{
@@ -63,13 +63,46 @@ public class CandidateService implements ServiceInterface<Candidate> {
 
     @Override
     public Candidate update(Candidate entity) {
-        Candidate candidate = candidateRepository.findById(entity.getId()).orElse(null);
+        Candidate candidate = candidateRepository.findById(entity.getId());
+        Candidate candidateEmail = new Candidate();
+        Candidate candidateContactNumber = new Candidate();
         if(candidate == null){
-            return candidate;
+            return null;
+        }
+        if (candidate.getContactNumber().equals(entity.getContactNumber()) || candidate.getEmail().equals(entity.getEmail())){
+            candidateEmail = null;
+            candidateContactNumber = null;
+        }else if(!candidate.getEmail().equals(entity.getEmail()) && candidate.getContactNumber().equals(entity.getEmail())){
+            candidateEmail = candidateRepository.findByEmail(entity.getEmail());
+            candidateContactNumber = null;
+        }else if(candidate.getEmail().equals(entity.getEmail()) && !candidate.getContactNumber().equals(entity.getContactNumber())){
+            candidateEmail = null;
+            candidateContactNumber = candidateRepository.findByContactNumber(entity.getContactNumber());
+        }else{
+            candidateEmail = candidateRepository.findByEmail(entity.getEmail());
+            candidateContactNumber = candidateRepository.findByContactNumber(entity.getContactNumber());
+        }
+        if(candidateEmail != null || candidateContactNumber != null){
+            return null;
         }else{
             Set<Skill> skills = skillService.getSkills(entity.getSkillSet());
-            entity.setSkillSet(skills);
-            return candidateRepository.save(entity);
+            candidate.setSkillSet(skills);
+            candidate.setFullName(entity.getFullName());
+            candidate.setEmail(entity.getEmail());
+            candidate.setDateOfBirth(entity.getDateOfBirth());
+            candidate.setContactNumber(entity.getContactNumber());
+            return candidateRepository.save(candidate);
+        }
+    }
+
+    public Candidate updateSkills(Candidate entity) {
+        Candidate candidate = candidateRepository.findById(entity.getId());
+        if(candidate == null){
+            return null;
+        }else{
+            Set<Skill> skills = skillService.getSkills(entity.getSkillSet());
+            candidate.setSkillSet(skills);
+            return candidateRepository.save(candidate);
         }
     }
 
