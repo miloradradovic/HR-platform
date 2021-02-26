@@ -106,7 +106,7 @@ public class CandidateController {
     public ResponseEntity<CandidateDTO> getCandidateById(@PathVariable Integer id) {
         Candidate candidate = candidateService.findOne(id);
         if(candidate != null){
-            return new ResponseEntity<CandidateDTO>(candidateMapper.toDto(candidate), HttpStatus.OK);
+            return new ResponseEntity<>(candidateMapper.toDto(candidate), HttpStatus.OK);
         }else{
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }

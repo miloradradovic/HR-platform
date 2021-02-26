@@ -34,7 +34,6 @@ import java.util.ArrayList;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment= SpringBootTest.WebEnvironment.RANDOM_PORT)
-@TestPropertySource("classpath:test.properties")
 public class CandidateControllerJUnitTests {
 
     private MockMvc mockMvc;
@@ -321,7 +320,6 @@ public class CandidateControllerJUnitTests {
 
     @Test
     @Transactional
-    @Rollback()
     public void testDeleteCandidateFail() throws Exception {
         int candidateId = -1;
         given(candidateService.delete(candidateId)).willReturn(true);

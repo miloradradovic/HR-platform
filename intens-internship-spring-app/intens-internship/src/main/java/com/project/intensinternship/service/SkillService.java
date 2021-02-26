@@ -39,7 +39,7 @@ public class SkillService implements ServiceInterface<Skill> {
 
     @Override
     public Skill findOne(int id) {
-        return skillRepository.findById(id).orElse(null);
+        return skillRepository.findById(id);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SkillService implements ServiceInterface<Skill> {
 
     @Override
     public boolean delete(int id) {
-        Skill found = skillRepository.findById(id).orElse(null);
+        Skill found = skillRepository.findById(id);
         if(found == null){
             return false;
         }else{

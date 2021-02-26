@@ -12,6 +12,9 @@ import java.util.List;
 
 @Repository
 public interface SkillRepository extends JpaRepository<Skill, Integer> {
+
+    Skill findById(int id);
+
     Skill findByName(String name);
 
     @Query(value = "SELECT * from skills where id in (SELECT skill_id from candidate_skill where candidate_id = :id)", nativeQuery = true)

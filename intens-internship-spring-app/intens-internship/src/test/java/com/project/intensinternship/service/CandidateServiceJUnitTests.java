@@ -113,7 +113,6 @@ public class CandidateServiceJUnitTests {
 
     @Test
     @Transactional
-    @Rollback()
     public void testSaveOneFailEmail(){
         Candidate toSave = TestUtils.generateCandidateSaved(TestUtils.generateCandidateToSave());
         toSave.setEmail("radovic.milorad1998@gmail.com");
@@ -128,7 +127,6 @@ public class CandidateServiceJUnitTests {
 
     @Test
     @Transactional
-    @Rollback()
     public void testSaveOneFailContactNumber(){
         Candidate toSave = TestUtils.generateCandidateSaved(TestUtils.generateCandidateToSave());
         toSave.setContactNumber("+381621127650");
@@ -187,7 +185,6 @@ public class CandidateServiceJUnitTests {
 
     @Test
     @Transactional
-    @Rollback()
     public void testUpdateFailEmail(){
         Candidate toUpdate = TestUtils.generateCandidateSaved(TestUtils.generateCandidateToSave());
         toUpdate.setEmail("radovic.milorad1998@gmail.com");
@@ -203,7 +200,6 @@ public class CandidateServiceJUnitTests {
 
     @Test
     @Transactional
-    @Rollback()
     public void testUpdateFailContactNumber(){
         Candidate toUpdate = TestUtils.generateCandidateSaved(TestUtils.generateCandidateToSave());
         toUpdate.setContactNumber("+381621127650");
@@ -220,6 +216,35 @@ public class CandidateServiceJUnitTests {
     @Test
     @Transactional
     @Rollback()
+    public void testUpdateSkillsSuccess(){
+        Candidate toUpdate = TestUtils.generateCandidateSaved(TestUtils.generateCandidateToSave());
+        toUpdate.setId(1);
+        Skill s = new Skill();
+        s.setName("update skill");
+        toUpdate.getSkillSet().add(s);
+        given(candidateRepository.save(toUpdate)).willReturn(toUpdate);
+        given(candidateRepository.findById(toUpdate.getId())).willReturn(toUpdate);
+
+        Candidate savedCandidate = candidateService.updateSkills(toUpdate);
+        assertEquals(toUpdate.getSkillSet().size(), savedCandidate.getSkillSet().size());
+    }
+
+    @Test
+    @Transactional
+    public void testUpdateSkillsFail(){
+        Candidate toUpdate = TestUtils.generateCandidateSaved(TestUtils.generateCandidateToSave());
+        toUpdate.setId(-1);
+        Skill s = new Skill();
+        s.setName("update skill");
+        toUpdate.getSkillSet().add(s);
+        given(candidateRepository.findById(toUpdate.getId())).willReturn(null);
+
+        Candidate savedCandidate = candidateService.updateSkills(toUpdate);
+        assertNull(savedCandidate);
+    }
+
+    @Test
+    @Transactional
     public void testSearchByNameFound(){
         SearchParamsDTO searchParamsDTO = TestUtils.generateSearchParamsDTO("name", true);
         List<Candidate> candidates = TestUtils.generateSearchResult("name", true);
@@ -231,7 +256,6 @@ public class CandidateServiceJUnitTests {
 
     @Test
     @Transactional
-    @Rollback()
     public void testSearchByNameNotFound(){
         SearchParamsDTO searchParamsDTO = TestUtils.generateSearchParamsDTO("name", false);
         List<Candidate> candidates = TestUtils.generateSearchResult("name", false);
@@ -243,7 +267,6 @@ public class CandidateServiceJUnitTests {
 
     @Test
     @Transactional
-    @Rollback()
     public void testSearchByOneSkillFound(){
         SearchParamsDTO searchParamsDTO = TestUtils.generateSearchParamsDTO("skill1", true);
         List<Candidate> candidates = TestUtils.generateSearchResult("skill1", true);
@@ -255,7 +278,6 @@ public class CandidateServiceJUnitTests {
 
     @Test
     @Transactional
-    @Rollback()
     public void testSearchByOneSkillNotFound(){
         SearchParamsDTO searchParamsDTO = TestUtils.generateSearchParamsDTO("skill1", false);
         List<Candidate> candidates = TestUtils.generateSearchResult("skill1", false);
@@ -267,16 +289,139 @@ public class CandidateServiceJUnitTests {
 
     @Test
     @Transactional
-    @Rollback()
     public void testSearchByMoreSkillsFound(){
         SearchParamsDTO searchParamsDTO = TestUtils.generateSearchParamsDTO("skill2", true);
         List<Candidate> candidates = TestUtils.generateSearchResult("skill2", true);
-        for (String skillName : searchParamsDTO.getValue().split(",")){
-            given(candidateRepository.searchByOneSkill(searchParamsDTO.getValue())).willReturn(candidates);
-        }
-        given(candidateRepository.searchByOneSkill(searchParamsDTO.getValue())).willReturn(candidates);
+        List<Candidate> candidatesJava = TestUtils.generateCandidatesBySkill("java");
+        List<Candidate> candidatesCSharp = TestUtils.generateCandidatesBySkill("c#");
+
+        given(candidateRepository.searchByOneSkill("Java programming")).willReturn(candidatesJava);
+        given(candidateRepository.searchByOneSkill("C# programming")).willReturn(candidatesCSharp);
 
         List<Candidate> found = candidateService.searchCandidates(searchParamsDTO);
-        assertEquals(found.size(), candidates.size());
+        assertEquals(candidates.size(), found.size());
     }
+
+    @Test
+    @Transactional
+    public void testSearchLogicalAndFirstCase(){
+        List<Candidate> searchResult = new ArrayList<>();
+        Candidate c1 = new Candidate();
+        c1.setId(1);
+        Candidate c2 = new Candidate();
+        c2.setId(2);
+        searchResult.add(c1);
+        searchResult.add(c2);
+
+        List<Candidate> searchByOneSkill = new ArrayList<>();
+        Candidate c3 = new Candidate();
+        c3.setId(1);
+        searchByOneSkill.add(c3);
+
+        List<Candidate> found = candidateService.searchLogicalAnd(searchResult, searchByOneSkill);
+        assertEquals(found.size(), 1);
+    }
+
+    @Test
+    @Transactional
+    public void testSearchLogicalAndSecondCase(){
+        List<Candidate> searchResult = new ArrayList<>();
+        Candidate c1 = new Candidate();
+        c1.setId(1);
+        searchResult.add(c1);
+
+        List<Candidate> searchByOneSkill = new ArrayList<>();
+        Candidate c2 = new Candidate();
+        c2.setId(2);
+        Candidate c3 = new Candidate();
+        c3.setId(1);
+        searchByOneSkill.add(c2);
+        searchByOneSkill.add(c3);
+
+        List<Candidate> found = candidateService.searchLogicalAnd(searchResult, searchByOneSkill);
+        assertEquals(found.size(), 1);
+    }
+
+    @Test
+    @Transactional
+    public void testCandidateInTheListTrue(){
+        List<Candidate> list = new ArrayList<>();
+        Candidate c1 = new Candidate();
+        c1.setId(1);
+        Candidate c2 = new Candidate();
+        c2.setId(2);
+        Candidate c3 = new Candidate();
+        c3.setId(3);
+        list.add(c1);
+        list.add(c2);
+        list.add(c3);
+
+        boolean found = candidateService.candidateInTheList(list, c1);
+        assertTrue(found);
+    }
+
+    @Test
+    @Transactional
+    public void testCandidateInTheListFalse(){
+        List<Candidate> list = new ArrayList<>();
+        Candidate c1 = new Candidate();
+        c1.setId(1);
+        Candidate c2 = new Candidate();
+        c2.setId(2);
+        Candidate c3 = new Candidate();
+        c3.setId(3);
+        list.add(c1);
+        list.add(c2);
+
+        boolean found = candidateService.candidateInTheList(list, c3);
+        assertFalse(found);
+    }
+
+    @Test
+    @Transactional
+    @Rollback()
+    public void testRemoveSkillSuccess(){
+        Candidate toUpdate = TestUtils.generateCandidateSaved(TestUtils.generateCandidateToSave());
+        toUpdate.setId(1);
+        Skill s = new Skill();
+        s.setName("update skill");
+        s.setId(1);
+        toUpdate.getSkillSet().add(s);
+        given(candidateRepository.save(toUpdate)).willReturn(toUpdate);
+        given(candidateRepository.findById(toUpdate.getId())).willReturn(toUpdate);
+
+        boolean removedSkill = candidateService.removeSkill(1, 1);
+        assertTrue(removedSkill);
+    }
+
+    @Test
+    @Transactional
+    public void testRemoveSkillFailCandidateId(){
+        Candidate toUpdate = TestUtils.generateCandidateSaved(TestUtils.generateCandidateToSave());
+        toUpdate.setId(-1);
+        Skill s = new Skill();
+        s.setName("update skill");
+        s.setId(1);
+        toUpdate.getSkillSet().add(s);
+        given(candidateRepository.findById(toUpdate.getId())).willReturn(null);
+
+        boolean removedSkill = candidateService.removeSkill(-1, 1);
+        assertFalse(removedSkill);
+    }
+
+    @Test
+    @Transactional
+    public void testRemoveSkillFailSkillId(){
+        Candidate toUpdate = TestUtils.generateCandidateSaved(TestUtils.generateCandidateToSave());
+        toUpdate.setId(-1);
+        Skill s = new Skill();
+        s.setName("update skill");
+        s.setId(1);
+        toUpdate.getSkillSet().add(s);
+        given(candidateRepository.findById(toUpdate.getId())).willReturn(null);
+
+        boolean removedSkill = candidateService.removeSkill(1, -1);
+        assertFalse(removedSkill);
+    }
+
 }

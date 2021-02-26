@@ -127,7 +127,7 @@ public class CandidateService implements ServiceInterface<Candidate> {
         }
     }
 
-    private List<Candidate> searchLogicalAnd(List<Candidate> searchResult, List<Candidate> searchByOneSkill) {
+    public List<Candidate> searchLogicalAnd(List<Candidate> searchResult, List<Candidate> searchByOneSkill) {
         List<Candidate> finalResult = new ArrayList<>();
         if (searchByOneSkill.size() < searchResult.size()){
             for (Candidate candidate : searchByOneSkill){
@@ -146,7 +146,7 @@ public class CandidateService implements ServiceInterface<Candidate> {
         }
     }
 
-    private boolean candidateInTheList(List<Candidate> list, Candidate candidate) {
+    public boolean candidateInTheList(List<Candidate> list, Candidate candidate) {
         for(Candidate c : list){
             if(c.getId() == candidate.getId()){
                 return true;
@@ -155,8 +155,8 @@ public class CandidateService implements ServiceInterface<Candidate> {
         return false;
     }
 
-    public boolean removeSkill(Integer candidateId, Integer skillId) {
-        Candidate found = candidateRepository.findById(candidateId).orElse(null);
+    public boolean removeSkill(int candidateId, Integer skillId) {
+        Candidate found = candidateRepository.findById(candidateId);
         int sizeBefore;
         if(found == null){
             return false;

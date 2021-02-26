@@ -187,4 +187,31 @@ public class TestUtils {
         }
         return skills;
     }
+
+    public static List<Candidate> generateCandidatesBySkill(String s) {
+        List<Candidate> candidates = new ArrayList<>();
+        if(s.equals("java")){
+            Candidate c1 = new Candidate();
+            c1.setId(1);
+            Candidate c2 = new Candidate();
+            c2.setId(6);
+            Candidate c3 = new Candidate();
+            c3.setId(7);
+            Candidate c4 = new Candidate();
+            c4.setId(10);
+            candidates.add(c1);
+            candidates.add(c2);
+            candidates.add(c3);
+            candidates.add(c4);
+            return candidates;
+        }else{
+            Candidate c1 = new Candidate();
+            c1.setId(1);
+            Candidate c2 = new Candidate();
+            c2.setId(6);
+            candidates.add(c1);
+            candidates.add(c2);
+            return candidates;
+        }
+    }
 }

@@ -67,8 +67,7 @@ public class SkillControllerJUnitTests {
         this.mockMvc.perform(post("/skills")
                 .content(json)
                 .contentType(contentType))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id", is(skillSaved.getId())));
+                .andExpect(status().isCreated());
     }
 
     @Test
