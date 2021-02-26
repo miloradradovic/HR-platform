@@ -1,6 +1,5 @@
 package com.project.intensinternship.api;
 
-
 import com.project.intensinternship.dto.CandidateDTO;
 import com.project.intensinternship.dto.SearchParamsDTO;
 import com.project.intensinternship.mappers.CandidateMapper;
@@ -13,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 
@@ -32,7 +32,7 @@ public class CandidateController {
     }
 
     @RequestMapping(method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CandidateDTO> createCandidate(@RequestBody CandidateDTO candidateDTO){
+    public ResponseEntity<CandidateDTO> createCandidate(@Valid @RequestBody CandidateDTO candidateDTO){
 
         Candidate candidate = candidateService.saveOne(candidateMapper.toEntity(candidateDTO));
         if(candidate != null) {
@@ -52,7 +52,7 @@ public class CandidateController {
     }
 
     @RequestMapping(method= RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CandidateDTO> updateCandidate(@RequestBody CandidateDTO candidateDTO){
+    public ResponseEntity<CandidateDTO> updateCandidate(@Valid @RequestBody CandidateDTO candidateDTO){
 
         Candidate candidate = candidateService.update(candidateMapper.toEntity(candidateDTO));
         if(candidate != null) {
@@ -64,7 +64,7 @@ public class CandidateController {
     }
 
     @RequestMapping(value = "/skills", method= RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CandidateDTO> updateCandidateWithSkill(@RequestBody CandidateDTO candidateDTO){
+    public ResponseEntity<CandidateDTO> updateCandidateWithSkill(@Valid @RequestBody CandidateDTO candidateDTO){
 
         Candidate candidate = candidateService.updateSkills(candidateMapper.toEntity(candidateDTO));
         if(candidate != null) {

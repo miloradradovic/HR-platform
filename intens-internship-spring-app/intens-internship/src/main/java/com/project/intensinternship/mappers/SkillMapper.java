@@ -19,7 +19,7 @@ public class SkillMapper implements MapperInterface<Skill, SkillDTO>{
 
     @Override
     public List<SkillDTO> toListDtos(List<Skill> entities) {
-        ArrayList<SkillDTO> dtos = new ArrayList<SkillDTO>();
+        ArrayList<SkillDTO> dtos = new ArrayList<>();
         for(Skill skill : entities) {
             SkillDTO dto = this.toDto(skill);
             dtos.add(dto);

@@ -1,5 +1,7 @@
 package com.project.intensinternship.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -7,30 +9,19 @@ public class CandidateDTO {
 
     private int id;
 
-
+    @NotBlank
     private String fullName;
 
-
+    @NotNull
     private Date dateOfBirth;
 
-
+    @NotBlank
     private String contactNumber;
 
-
+    @NotBlank
     private String email;
 
-
     private ArrayList<String> skills;
-
-
-    public CandidateDTO(int id, String fullName, Date dateOfBirth, String contactNumber, String email, ArrayList<String> skills) {
-        this.id = id;
-        this.fullName = fullName;
-        this.dateOfBirth = dateOfBirth;
-        this.contactNumber = contactNumber;
-        this.email = email;
-        this.skills = skills;
-    }
 
     public CandidateDTO(int id, String fullName, Date dateOfBirth, String contactNumber, String email) {
         this.id = id;

@@ -1,22 +1,13 @@
 package com.project.intensinternship.dto;
 
-import java.util.ArrayList;
+import javax.validation.constraints.NotBlank;
 
 public class SkillDTO {
 
     private int id;
 
-
+    @NotBlank
     private String name;
-
-
-    private ArrayList<String> candidateEmails;
-
-    public SkillDTO(int id, String name, ArrayList<String> candidateEmails) {
-        this.id = id;
-        this.name = name;
-        this.candidateEmails = candidateEmails;
-    }
 
     public SkillDTO(int id, String name) {
         this.id = id;
@@ -43,11 +34,4 @@ public class SkillDTO {
         this.name = name;
     }
 
-    public ArrayList<String> getCandidateEmails() {
-        return candidateEmails;
-    }
-
-    public void setCandidateEmails(ArrayList<String> candidateEmails) {
-        this.candidateEmails = candidateEmails;
-    }
 }

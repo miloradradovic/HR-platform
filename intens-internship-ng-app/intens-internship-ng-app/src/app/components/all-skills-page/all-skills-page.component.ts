@@ -15,6 +15,10 @@ export class AllSkillsPageComponent implements OnInit {
               private skillService: SkillService) { }
 
   ngOnInit(): void {
+    this.setupData();
+  }
+
+  private setupData(): void{
     this.skillService.getAllSkills().subscribe(
       result => {
         this.skills = result;
@@ -25,7 +29,7 @@ export class AllSkillsPageComponent implements OnInit {
     );
   }
 
-  onDelete($event: number) {
+  onDelete($event: number): void {
     this.skillService.deleteSkill($event).subscribe(
       result => {
         this.snackBar.open('Successfully deleted!', 'Ok', {duration: 2000});

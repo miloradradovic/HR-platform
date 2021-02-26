@@ -16,12 +16,10 @@ import static org.mockito.BDDMockito.given;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -29,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 @RunWith(SpringRunner.class)
@@ -38,12 +36,12 @@ public class CandidateControllerJUnitTests {
 
     private MockMvc mockMvc;
 
-    private CandidateMapper candidateMapper = new CandidateMapper();
+    private final CandidateMapper candidateMapper = new CandidateMapper();
 
-    private MediaType contentType = new MediaType(
+    private final MediaType contentType = new MediaType(
             MediaType.APPLICATION_JSON.getType(),
             MediaType.APPLICATION_JSON.getSubtype(),
-            Charset.forName("utf8"));
+            StandardCharsets.UTF_8);
 
     @Mock
     private CandidateService candidateService;
@@ -77,7 +75,6 @@ public class CandidateControllerJUnitTests {
     public void testAddNewCandidateEmailFail() throws Exception {
         CandidateDTO candidateToSave = TestUtils.generateCandidateToSave();
         candidateToSave.setContactNumber("+381621127651");
-        Candidate candidateSaved = TestUtils.generateCandidateSaved(candidateToSave);
         String json = TestUtils.json(candidateToSave);
 
         given(candidateService.saveOne(this.candidateMapper.toEntity(candidateToSave))).willReturn(null);
@@ -92,7 +89,6 @@ public class CandidateControllerJUnitTests {
     public void testAddNewCandidateContactNumberFail() throws Exception {
         CandidateDTO candidateToSave = TestUtils.generateCandidateToSave();
         candidateToSave.setEmail("radovic.milorad1998@gmail.com");
-        Candidate candidateSaved = TestUtils.generateCandidateSaved(candidateToSave);
         String json = TestUtils.json(candidateToSave);
 
         given(candidateService.saveOne(this.candidateMapper.toEntity(candidateToSave))).willReturn(null);
@@ -215,7 +211,6 @@ public class CandidateControllerJUnitTests {
     public void testUpdateCandidateFailId() throws Exception {
         CandidateDTO candidateToUpdate = TestUtils.generateCandidateToUpdate();
         candidateToUpdate.setId(-1);
-        Candidate candidateUpdated = TestUtils.generateCandidateUpdated(candidateToUpdate);
         String json = TestUtils.json(candidateToUpdate);
         given(candidateService.update(this.candidateMapper.toEntity(candidateToUpdate))).willReturn(null);
         this.mockMvc.perform(put("/candidates")
@@ -229,7 +224,6 @@ public class CandidateControllerJUnitTests {
     public void testUpdateCandidateFailEmail() throws Exception {
         CandidateDTO candidateToUpdate = TestUtils.generateCandidateToUpdate();
         candidateToUpdate.setEmail("pera.peric@gmail.com");
-        Candidate candidateUpdated = TestUtils.generateCandidateUpdated(candidateToUpdate);
         String json = TestUtils.json(candidateToUpdate);
         given(candidateService.update(this.candidateMapper.toEntity(candidateToUpdate))).willReturn(null);
         this.mockMvc.perform(put("/candidates")
@@ -243,7 +237,6 @@ public class CandidateControllerJUnitTests {
     public void testUpdateCandidateFailContactNumber() throws Exception {
         CandidateDTO candidateToUpdate = TestUtils.generateCandidateToUpdate();
         candidateToUpdate.setContactNumber("+381621127651");
-        Candidate candidateUpdated = TestUtils.generateCandidateUpdated(candidateToUpdate);
         String json = TestUtils.json(candidateToUpdate);
         given(candidateService.update(this.candidateMapper.toEntity(candidateToUpdate))).willReturn(null);
         this.mockMvc.perform(put("/candidates")

@@ -9,11 +9,6 @@ public class SearchParamsDTO {
 
     }
 
-    public SearchParamsDTO(String param, String value) {
-        this.param = param;
-        this.value = value;
-    }
-
     public String getParam() {
         return param;
     }

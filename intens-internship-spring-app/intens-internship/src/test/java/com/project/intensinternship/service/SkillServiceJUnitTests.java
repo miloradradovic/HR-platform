@@ -1,7 +1,6 @@
 package com.project.intensinternship.service;
 
 import com.project.intensinternship.TestUtils;
-import com.project.intensinternship.model.Candidate;
 import com.project.intensinternship.model.Skill;
 import com.project.intensinternship.repository.SkillRepository;
 import org.junit.Test;
@@ -32,9 +31,6 @@ public class SkillServiceJUnitTests {
 
     @Mock
     SkillRepository skillRepository;
-
-    @Mock
-    CandidateService candidateService;
 
     @InjectMocks
     SkillService skillService;

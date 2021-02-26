@@ -1,20 +1,16 @@
 package com.project.intensinternship.api;
 
-import com.project.intensinternship.dto.CandidateDTO;
 import com.project.intensinternship.dto.SkillDTO;
 import com.project.intensinternship.mappers.SkillMapper;
-import com.project.intensinternship.model.Candidate;
 import com.project.intensinternship.model.Skill;
 import com.project.intensinternship.service.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +29,7 @@ public class SkillController {
     }
 
     @RequestMapping(method= RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<SkillDTO> createSkill(@RequestBody SkillDTO skillDTO){
+    public ResponseEntity<SkillDTO> createSkill(@Valid @RequestBody SkillDTO skillDTO){
 
         Skill skill = skillService.saveOne(skillMapper.toEntity(skillDTO));
         if(skill != null) {

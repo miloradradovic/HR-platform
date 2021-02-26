@@ -53,36 +53,33 @@ export class DetailedCandidatePageComponent implements OnInit {
         this.candidateService.getCandidateById(this.idPassed).subscribe(
           result2 => {
             this.candidate = result2; // candidate found by id
-            this.form.controls.fullNameInput.setValue(this.candidate.fullName);
+            this.form.controls.fullNameInput.setValue(this.candidate.fullName); // fill inputs
             this.form.controls.emailInput.setValue(this.candidate.email);
             this.form.controls.contactNumberInput.setValue(this.candidate.contactNumber);
             this.form.controls.dateInput.setValue(this.candidate.dateOfBirth);
-            const skillList = [];
-            this.candidate.skills.forEach((item, index) => {
-              this.skillsBackend.forEach((item2, index2) => {
-                if (item2.name === item){
-                  const skillObj = {id: item2.id, name: item2.name};
-                  skillList.push(skillObj);
-                }
-              });
-            });
-            this.skills = skillList;
-            this.skillsBackend.forEach((item, index) => {
-              let check = false;
-              this.skills.forEach((item2, index2) => {
-                if (item2.id === item.id){
-                  check = true;
-                }
-              });
-              if (check === false){
-                this.options.push(item.name);
+            this.skillService.getSkillsByCandidateId(this.idPassed).subscribe(
+              result3 => {
+                this.skills = result3; // skills that will be shown on the table, found by candidate id
+                this.skillsBackend.forEach((item, index) => {
+                  let check = false;
+                  this.skills.forEach((item2, index2) => {
+                    if (item2.id === item.id){
+                      check = true;
+                    }
+                  });
+                  if (check === false){
+                    this.options.push(item.name);
+                  }
+                });
+                this.filteredOptions = this.myControl.valueChanges // setting up autocomplete
+                  .pipe(
+                    startWith(''),
+                    map(value => this._filter(value))
+                  );
+              }, error => {
+                this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
               }
-            });
-            this.filteredOptions = this.myControl.valueChanges
-              .pipe(
-                startWith(''),
-                map(value => this._filter(value))
-              );
+            );
           },
           error => {
             this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
@@ -103,32 +100,29 @@ export class DetailedCandidatePageComponent implements OnInit {
         this.candidateService.getCandidateById(this.idPassed).subscribe(
           result2 => {
             this.candidate = result2; // candidate found by id
-            const skillList = [];
-            this.candidate.skills.forEach((item, index) => {
-              this.skillsBackend.forEach((item2, index2) => {
-                if (item2.name === item){
-                  const skillObj = {id: item2.id, name: item2.name};
-                  skillList.push(skillObj);
-                }
-              });
-            });
-            this.skills = skillList;
-            this.skillsBackend.forEach((item, index) => {
-              let check = false;
-              this.skills.forEach((item2, index2) => {
-                if (item2.id === item.id){
-                  check = true;
-                }
-              });
-              if (check === false){
-                this.options.push(item.name);
+            this.skillService.getSkillsByCandidateId(this.idPassed).subscribe(
+              result3 => {
+                this.skills = result3; // skills that will be shown on the table, found by candidate id
+                this.skillsBackend.forEach((item, index) => {
+                  let check = false;
+                  this.skills.forEach((item2, index2) => {
+                    if (item2.id === item.id){
+                      check = true;
+                    }
+                  });
+                  if (check === false){
+                    this.options.push(item.name);
+                  }
+                });
+                this.filteredOptions = this.myControl.valueChanges // setting up autocomplete
+                  .pipe(
+                    startWith(''),
+                    map(value => this._filter(value))
+                  );
+              }, error => {
+                this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
               }
-            });
-            this.filteredOptions = this.myControl.valueChanges
-              .pipe(
-                startWith(''),
-                map(value => this._filter(value))
-              );
+            );
           },
           error => {
             this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
@@ -159,13 +153,13 @@ export class DetailedCandidatePageComponent implements OnInit {
       });
       if (check === false){
         let found = false;
-        this.skillsBackend.forEach((item, index) => {
+        this.skillsBackend.forEach((item, index) => { // checking if skill to be added exists in the database
           if (item.name === this.myControl.value){
-            newList.push({id: item.id, name: item.name});
+            newList.push({id: item.id, name: item.name}); // found, set its id and name
             found = true;
           }
         });
-        if (found === false){
+        if (found === false){ // if the skill to be added doesn't exist in the database, set its id to the negative number
           this.idNew = this.idNew - 1;
           newList.push({id: this.idNew, name: this.myControl.value});
         }
@@ -178,7 +172,7 @@ export class DetailedCandidatePageComponent implements OnInit {
         this.options = [];
         this.candidateService.updateCandidateWithSkill(this.candidate).subscribe(
           result => {
-            this.resetData();
+            this.resetData(); // reset the data
           },
           error => {
             this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
@@ -190,7 +184,7 @@ export class DetailedCandidatePageComponent implements OnInit {
 
   onDelete($event: number): void{
     const newList = [];
-    let skill;
+    let skill; // skill to be deleted
 
     this.skillsBackend.forEach((item, index) => {
       if (item.id === $event){
@@ -206,7 +200,7 @@ export class DetailedCandidatePageComponent implements OnInit {
     this.options = [];
     this.candidateService.removeSkillFromCandidate(this.idPassed, skill.id).subscribe(
       result => {
-        this.resetData();
+        this.resetData(); // reset the data
       },
       error => {
         this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
@@ -235,4 +229,3 @@ export class DetailedCandidatePageComponent implements OnInit {
     );
   }
 }
-

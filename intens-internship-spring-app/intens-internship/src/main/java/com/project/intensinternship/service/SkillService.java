@@ -19,7 +19,7 @@ public class SkillService implements ServiceInterface<Skill> {
     @Autowired
     CandidateService candidateService;
 
-    public Set<Skill> getSkills(Set<Skill> skillSet) {
+    public Set<Skill> getSkills(Set<Skill> skillSet) { // finding skills in database if exist, otherwise initializes new skill and only sets the name
         Set<Skill> newSkills = new HashSet<>();
         for(Skill skill : skillSet){
             Skill foundSkill = skillRepository.findByName(skill.getName());
@@ -62,8 +62,8 @@ public class SkillService implements ServiceInterface<Skill> {
                 Candidate candidateSet = candidateService.findOne(candidate.getId());
                 for(Skill s : candidateSet.getSkillSet()){
                     if(s.getId() == id){
-                        candidateSet.getSkillSet().remove(s);
-                        candidateService.update(candidateSet);
+                        candidateSet.getSkillSet().remove(s); // removes row from candidate-skill table
+                        candidateService.update(candidateSet); // then do the candidate update before doing the skill delete
                         break;
                     }
                 }
@@ -74,7 +74,7 @@ public class SkillService implements ServiceInterface<Skill> {
     }
 
     @Override
-    public Skill update(Skill entity) {
+    public Skill update(Skill entity) { // method is never used in the context of application. It has to be here because of the ServiceInterface.
         return null;
     }
 

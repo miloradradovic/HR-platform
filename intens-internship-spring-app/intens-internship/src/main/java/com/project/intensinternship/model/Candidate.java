@@ -13,10 +13,10 @@ public class Candidate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(name = "fullName", unique = false, nullable = false)
+    @Column(name = "fullName", nullable = false)
     private String fullName;
 
-    @Column(name = "dateOfBirth", unique = false, nullable = false)
+    @Column(name = "dateOfBirth", nullable = false)
     private Date dateOfBirth;
 
     @Column(name = "contactNumber", unique = true, nullable = false)

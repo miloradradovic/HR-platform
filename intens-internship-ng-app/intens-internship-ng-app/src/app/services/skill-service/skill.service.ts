@@ -21,4 +21,8 @@ export class SkillService {
   deleteSkill($event: number): Observable<any> {
     return this.http.delete('http://localhost:8080/skills/' + $event);
   }
+
+  getSkillsByCandidateId(idPassed: number): Observable<any> {
+    return this.http.get('http://localhost:8080/skills/by-candidate/' + idPassed);
+  }
 }

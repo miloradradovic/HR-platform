@@ -19,7 +19,7 @@ export class AddCandidatePageComponent implements OnInit {
   options = [];
   filteredOptions: Observable<string[]>;
   skills = [];
-  skillsBackend = [];
+  skillsBackend = []; // all skills that currently exist in the database
   years18: Date;
   idNew = 0;
 
@@ -85,7 +85,7 @@ export class AddCandidatePageComponent implements OnInit {
     this.skills.forEach((item, index) => {
       skillList.push(item.name);
     });
-    if (fullNameInput !== '' && emailInput !== '' && contactNumberInput !== '' && dateInput) {
+    if (fullNameInput !== '' && emailInput !== '' && contactNumberInput !== '' && dateInput) { // if nothing is empty
       const user = {fullName: fullNameInput, email: emailInput,
         contactNumber: contactNumberInput, dateOfBirth: dateInput, skills: skillList};
       this.candidateService.addCandidate(user).subscribe(
@@ -104,21 +104,20 @@ export class AddCandidatePageComponent implements OnInit {
   onDelete($event: number): void {
     const newList = [];
     let skill;
-    if ($event < 0){
+    if ($event < 0){ // the clicked skill doesn't exist in the database yet, so just remove it from the list
       this.skills.forEach((item, index) => {
         if (item.id !== $event){
           newList.push(item);
         }
       });
       this.skills = newList;
-    }else{
+    }else{ // the clicked skill exists in the database
       this.skillsBackend.forEach((item, index) => {
         if (item.id === $event){
-          skill = item;
-          console.log(skill);
+          skill = item; // finding the selected skill
         }
       });
-      this.skills.forEach((item, index) => {
+      this.skills.forEach((item, index) => { // removing the clicked skill from the list
         if (item.name !== skill.name){
           newList.push(item);
         }
@@ -127,41 +126,42 @@ export class AddCandidatePageComponent implements OnInit {
 
       const newOptions = this.options;
       newOptions.push(skill.name);
-      this.options = newOptions;
-      this.setupOptions();
+      this.options = newOptions; // updating the autocomplete
+      this.setupOptions(); // updating the autocomplete filter
     }
   }
 
   addSkill(): void {
-    if (this.myControl.value !== null){
+    if (this.myControl.value !== null){ // don't do anything if autocomplete is empty
       const newList = [];
       let check = false;
-      this.skills.forEach((item, index) => {
+      this.skills.forEach((item, index) => { // check if the skill to be added already exists in skill list
         newList.push(item);
         if (item.name === this.myControl.value){
           check = true;
         }
       });
-      if (check === false){
+      if (check === false){ // if skill doesn't exist in the list
         let found = false;
         this.skillsBackend.forEach((item, index) => {
           if (item.name === this.myControl.value){
             newList.push({id: item.id, name: item.name});
-            found = true;
+            found = true; // checking if skill to be added exists in database. If yes then update its id
           }
         });
-        if (found === false){
+        if (found === false){ // if skill doesn't exist in database, set its id to the negative number
           this.idNew = this.idNew - 1;
           newList.push({id: this.idNew, name: this.myControl.value});
         }
         this.skills = newList;
         const newOptions = [];
-        this.options.forEach((item, index) => {
+        this.options.forEach((item, index) => { // update the options by removing the added skill
           if (item !== this.myControl.value){
             newOptions.push(item);
           }
         });
         this.options = newOptions;
+        this.setupOptions(); // setup the filter for the autocomplete
       }
     }
   }

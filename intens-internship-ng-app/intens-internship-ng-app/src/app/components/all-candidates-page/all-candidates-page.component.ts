@@ -1,11 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatSelectChange} from '@angular/material/select';
 import {Router} from '@angular/router';
 import {CandidateService} from '../../services/candidate-service/candidate.service';
-import { MatPaginator } from '@angular/material/paginator';
-import {MatTableDataSource} from '@angular/material/table';
 import {SkillService} from '../../services/skill-service/skill.service';
 
 @Component({
@@ -30,6 +28,10 @@ export class AllCandidatesPageComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setupData();
+  }
+
+  private setupData(): void {
     this.candidateService.getAllCandidates().subscribe(
       result => {
         this.candidates = result;
@@ -49,7 +51,7 @@ export class AllCandidatesPageComponent implements OnInit {
   }
 
   onSelectChange($event: MatSelectChange): void{
-    this.filterType = $event.value;
+    this.filterType = $event.value; // change the filter type
   }
 
   goToDetailed($event: number): void{
@@ -69,13 +71,12 @@ export class AllCandidatesPageComponent implements OnInit {
         this.snackBar.open('Successfully deleted the candidate!', 'Ok', {duration: 2000});
       },
       error => {
-        console.log(error);
       }
     );
   }
 
   search(): void{
-    if (this.filterType === 'full name'){
+    if (this.filterType === 'full name'){ // search by name
       const searchParams = {param: 'name', value: this.candidateNameInput};
       this.candidateService.search(searchParams).subscribe(
         result => {
@@ -85,16 +86,16 @@ export class AllCandidatesPageComponent implements OnInit {
           this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
         }
       );
-    }else {
+    }else { // search by skill(s)
       const selected = this.selectedSkills.value;
-      if (selected !== null){
+      if (selected !== null){ // selected === null if nothing is selected
         let searchValue = '';
-        if (selected.size !== 0){
+        if (selected.size !== 0){ // if more than one skill was selected, make the searchValue like 'skill1,skill2', otherwise do nothing
           selected.forEach((item, index) => {
             searchValue += item;
             searchValue += ',';
           });
-          searchValue = searchValue.slice(0, -1);
+          searchValue = searchValue.slice(0, -1); // removes the last ','
           const searchParams = {param: this.filterType, value: searchValue};
           this.candidateService.search(searchParams).subscribe(
             result => {
@@ -105,7 +106,7 @@ export class AllCandidatesPageComponent implements OnInit {
             }
           );
         }
-      }else{
+      }else{ // nothing is selected, so get all the candidates
         this.candidateService.getAllCandidates().subscribe(
           result => {
             this.candidates = result;

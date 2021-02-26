@@ -57,7 +57,4 @@ public class Skill {
         return candidateSet;
     }
 
-    public void setCandidateSet(Set<Candidate> candidateSet) {
-        this.candidateSet = candidateSet;
-    }
 }
