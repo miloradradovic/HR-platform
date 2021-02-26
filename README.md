@@ -14,3 +14,12 @@
       - Download postgresql from: https://www.enterprisedb.com/downloads/postgres-postgresql-downloads
       - After that, use the preferred tool for database to access it. 
       - Credentials can be found at the application.properties.
+
+# Additional
+  - Tests
+      - Service and api layer are covered in JUnit tests and they are all listed in SuiteAll. 
+      - By running SuiteAll all tests will start working.
+
+  - Swagger
+      - Integrated into Spring Boot application.
+      - Can be found at http://localhost:8080/swagger-ui.html while backend is running.
