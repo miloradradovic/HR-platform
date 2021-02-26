@@ -19,6 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.annotation.PostConstruct;
 import java.util.*;
 
+import static com.project.intensinternship.constants.UnitConstants.*;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.BDDMockito.given;
@@ -48,21 +49,21 @@ public class SkillServiceJUnitTests {
     public void testGetSkills(){
         Set<Skill> skillsToFind = new HashSet<>();
         Skill s1 = new Skill();
-        s1.setName("New skill");
+        s1.setName(GET_SKILLS_NOT_EXIST);
         Skill s2 = new Skill();
-        s2.setName("Java programming");
+        s2.setName(GET_SKILLS_EXISTS);
         skillsToFind.add(s1);
         skillsToFind.add(s2);
 
-        Skill foundSkill = new Skill(1, "Java programming");
+        Skill foundSkill = new Skill(GET_SKILLS_EXISTS_ID, GET_SKILLS_EXISTS);
 
-        given(skillRepository.findByName("Java programming")).willReturn(foundSkill);
-        given(skillRepository.findByName("New skill")).willReturn(null);
+        given(skillRepository.findByName(GET_SKILLS_EXISTS)).willReturn(foundSkill);
+        given(skillRepository.findByName(GET_SKILLS_NOT_EXIST)).willReturn(null);
 
         Set<Skill> found = skillService.getSkills(skillsToFind);
 
         for(Skill s : found){
-            if (s.getName().equals("Java programming")){
+            if (s.getName().equals(GET_SKILLS_EXISTS)){
                 assertEquals(foundSkill.getId(), s.getId());
             }
         }
@@ -83,11 +84,11 @@ public class SkillServiceJUnitTests {
 
     @Test
     public void testFindOne(){
-        int skillId = 1;
+        int skillId = GET_SKILL_BY_ID;
 
         Skill shouldFind = new Skill();
-        shouldFind.setId(1);
-        shouldFind.setName("Java programming");
+        shouldFind.setId(GET_SKILL_BY_ID);
+        shouldFind.setName(GET_SKILL_BY_ID_NAME);
 
         given(skillRepository.findById(skillId)).willReturn(shouldFind);
 
@@ -99,7 +100,7 @@ public class SkillServiceJUnitTests {
 
     @Test
     public void testFindOneFail(){
-        int skillId = -1;
+        int skillId = NON_EXISTENT_ID;
 
         given(skillRepository.findById(skillId)).willReturn(null);
 
@@ -114,23 +115,23 @@ public class SkillServiceJUnitTests {
     @Rollback()
     public void testSaveOneSuccess(){
         Skill toSave = new Skill();
-        toSave.setName("New skill");
+        toSave.setName(NEW_SKILL_NAME);
         Skill saved = new Skill();
-        saved.setName("New skill");
-        saved.setId(21);
+        saved.setName(NEW_SKILL_NAME);
+        saved.setId(NEW_SKILL_SAVED_ID);
         given(skillRepository.save(toSave)).willReturn(saved);
         given(skillRepository.findByName(toSave.getName())).willReturn(null);
 
         Skill savedSkill = skillService.saveOne(toSave);
 
-        assertEquals(21, savedSkill.getId());
+        assertEquals(saved.getId(), savedSkill.getId());
     }
 
     @Test
     @Transactional
     public void testSaveOneFail(){
         Skill toSave = new Skill();
-        toSave.setName("Java programming");
+        toSave.setName(NEW_SKILL_FAIL_NAME);
         given(skillRepository.findByName(toSave.getName())).willReturn(toSave);
 
         Skill savedSkill = skillService.saveOne(toSave);
@@ -142,9 +143,9 @@ public class SkillServiceJUnitTests {
     @Transactional
     @Rollback()
     public void testDelete(){
-        int skillId = 1;
+        int skillId = DELETE_SKILL_ID;
         Skill skill = new Skill();
-        skill.setId(1);
+        skill.setId(DELETE_SKILL_ID);
 
         given(skillRepository.findById(skillId)).willReturn(skill);
 
@@ -156,7 +157,7 @@ public class SkillServiceJUnitTests {
     @Test
     @Transactional
     public void testDeleteFail(){
-        int skillId = -1;
+        int skillId = NON_EXISTENT_ID;
 
         given(skillRepository.findById(skillId)).willReturn(null);
 
@@ -173,23 +174,8 @@ public class SkillServiceJUnitTests {
 
     @Test
     public void testFindByCandidate(){
-        int candidateId = 1;
-        List<Skill> foundSkills = new ArrayList<>();
-        Skill s1 = new Skill();
-        s1.setId(1);
-        Skill s2 = new Skill();
-        s2.setId(2);
-        Skill s3 = new Skill();
-        s3.setId(7);
-        Skill s4 = new Skill();
-        s4.setId(15);
-        Skill s5 = new Skill();
-        s5.setId(17);
-        foundSkills.add(s1);
-        foundSkills.add(s2);
-        foundSkills.add(s3);
-        foundSkills.add(s4);
-        foundSkills.add(s5);
+        int candidateId = GET_SKILLS_BY_CANDIDATE_ID;
+        List<Skill> foundSkills = TestUtils.generateSkillsByCandidate();
 
         given(skillRepository.findByCandidate(candidateId)).willReturn(foundSkills);
 

@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.project.intensinternship.constants.UnitConstants.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -72,7 +73,7 @@ public class SkillControllerJUnitTests {
     @Transactional
     public void testAddNewSkillFail() throws Exception {
         SkillDTO skillToSave = TestUtils.generateSkillToSave();
-        skillToSave.setName("Java programming");
+        skillToSave.setName(NEW_SKILL_FAIL_NAME);
         String json = TestUtils.json(skillToSave);
         given(skillService.saveOne(this.skillMapper.toEntity(skillToSave))).willReturn(null);
         this.mockMvc.perform(post("/skills")
@@ -84,22 +85,22 @@ public class SkillControllerJUnitTests {
     @Test
     @Transactional
     public void testGetSkillsByCandidateId() throws Exception {
-        int candidateId = 1;
+        int candidateId = GET_SKILLS_BY_CANDIDATE_ID;
         List<Skill> skills = TestUtils.generateSkillsByCandidate();
         given(skillService.findByCandidate(candidateId)).willReturn(skills);
-        this.mockMvc.perform(get("/skills/by-candidate/1")
+        this.mockMvc.perform(get("/skills/by-candidate/" + candidateId)
                 .contentType(contentType))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(5)));
+                .andExpect(jsonPath("$", hasSize(SKILLS_BY_CANDIDATE_SIZE)));
     }
 
     @Test
     @Transactional
     @Rollback()
     public void testDeleteSkillSuccess() throws Exception {
-        int skillId = 1;
+        int skillId = DELETE_SKILL_ID;
         given(skillService.delete(skillId)).willReturn(true);
-        this.mockMvc.perform(delete("/skills/1")
+        this.mockMvc.perform(delete("/skills/" + skillId)
                 .contentType(contentType))
                 .andExpect(status().isOk());
     }
@@ -107,9 +108,9 @@ public class SkillControllerJUnitTests {
     @Test
     @Transactional
     public void testDeleteSkillFail() throws Exception {
-        int skillId = -1;
+        int skillId = NON_EXISTENT_ID;
         given(skillService.delete(skillId)).willReturn(false);
-        this.mockMvc.perform(delete("/skills/-1")
+        this.mockMvc.perform(delete("/skills/" + skillId)
                 .contentType(contentType))
                 .andExpect(status().isBadRequest());
     }
@@ -123,6 +124,6 @@ public class SkillControllerJUnitTests {
         this.mockMvc.perform(get("/skills")
                 .contentType(contentType))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(20)));
+                .andExpect(jsonPath("$", hasSize(ALL_SKILLS_SIZE)));
     }
 }

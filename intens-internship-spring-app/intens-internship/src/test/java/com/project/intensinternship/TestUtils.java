@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
+import static com.project.intensinternship.constants.UnitConstants.*;
+
 public class TestUtils {
 
     public static String json(Object object)
@@ -28,9 +30,9 @@ public class TestUtils {
     public static CandidateDTO generateCandidateToSave(){
         CandidateDTO dto = new CandidateDTO();
         dto.setSkills(new ArrayList<>());
-        dto.setFullName("test full name");
-        dto.setEmail("test email");
-        dto.setContactNumber("test contact number");
+        dto.setFullName(NEW_CANDIDATE_NAME);
+        dto.setEmail(NEW_CANDIDATE_EMAIL);
+        dto.setContactNumber(NEW_CANDIDATE_CONTACT_NUMBER);
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         try{
             Date newDate = formatter.parse(formatter.format(new Date()));
@@ -43,7 +45,7 @@ public class TestUtils {
 
     public static Candidate generateCandidateSaved(CandidateDTO dto){
         Candidate candidate = new Candidate();
-        candidate.setId(11);
+        candidate.setId(NEW_CANDIDATE_SAVED_ID);
         candidate.setSkillSet(new HashSet<>());
         candidate.setContactNumber(dto.getContactNumber());
         candidate.setDateOfBirth(dto.getDateOfBirth());
@@ -54,29 +56,29 @@ public class TestUtils {
 
     public static SearchParamsDTO generateSearchParamsDTO(String param, boolean found){
         SearchParamsDTO searchParamsDTO = new SearchParamsDTO();
-        if (param.equals("name") && found){
-            searchParamsDTO.setParam("name");
-            searchParamsDTO.setValue("Mar");
+        if (param.equals(SEARCH_PARAM_NAME) && found){
+            searchParamsDTO.setParam(SEARCH_PARAM_NAME);
+            searchParamsDTO.setValue(SEARCH_VALUE_NAME_FOUND);
             return searchParamsDTO;
-        }else if (param.equals("name") && !found){
-            searchParamsDTO.setParam("name");
-            searchParamsDTO.setValue("nonexistent");
+        }else if (param.equals(SEARCH_PARAM_NAME) && !found){
+            searchParamsDTO.setParam(SEARCH_PARAM_NAME);
+            searchParamsDTO.setValue(SEARCH_VALUE_NAME_NOT_FOUND);
             return searchParamsDTO;
-        }else if (param.equals("skill1") && found){
-            searchParamsDTO.setParam("skill");
-            searchParamsDTO.setValue("Java programming");
+        }else if (param.equals(SEARCH_PARAM_SKILL_ONE) && found){
+            searchParamsDTO.setParam(SEARCH_PARAM_SKILL);
+            searchParamsDTO.setValue(SEARCH_VALUE_SKILL_ONE_FOUND);
             return searchParamsDTO;
-        }else if (param.equals("skill1") && !found){
-            searchParamsDTO.setParam("skill");
-            searchParamsDTO.setValue("nonexistent");
+        }else if (param.equals(SEARCH_PARAM_SKILL_ONE) && !found){
+            searchParamsDTO.setParam(SEARCH_PARAM_SKILL);
+            searchParamsDTO.setValue(SEARCH_VALUE_SKILL_ONE_NOT_FOUND);
             return searchParamsDTO;
-        }else if (param.equals("skill2") && found){
-            searchParamsDTO.setParam("skill");
-            searchParamsDTO.setValue("Java programming,C# programming");
+        }else if (param.equals(SEARCH_PARAM_SKILL_MORE) && found){
+            searchParamsDTO.setParam(SEARCH_PARAM_SKILL);
+            searchParamsDTO.setValue(SEARCH_VALUE_SKILL_MORE_FOUND);
             return searchParamsDTO;
         }else { //param = skill2 and found = false
-            searchParamsDTO.setParam("skill");
-            searchParamsDTO.setValue("Java programming,Nonexistent");
+            searchParamsDTO.setParam(SEARCH_PARAM_SKILL);
+            searchParamsDTO.setValue(SEARCH_VALUE_SKILL_MORE_NOT_FOUND);
             return searchParamsDTO;
         }
     }
@@ -84,23 +86,23 @@ public class TestUtils {
     public static ArrayList<Candidate> generateSearchResult(String param, boolean found){
         if (found){
             ArrayList<Candidate> dtos = new ArrayList<>();
-            if (param.equals("name")){
+            if (param.equals(SEARCH_PARAM_NAME)){
                 Candidate candidateDTO1 = new Candidate();
-                candidateDTO1.setFullName("Marko Markovic");
+                candidateDTO1.setFullName(SEARCH_RESULT_NAME_ONE);
                 Candidate candidateDTO2 = new Candidate();
-                candidateDTO2.setFullName("Marija Markovic");
+                candidateDTO2.setFullName(SEARCH_RESULT_NAME_TWO);
                 dtos.add(candidateDTO1);
                 dtos.add(candidateDTO2);
                 return dtos;
-            }else if (param.equals("skill1")){
+            }else if (param.equals(SEARCH_PARAM_SKILL_ONE)){
                 Candidate candidateDTO1 = new Candidate();
-                candidateDTO1.setId(1);
+                candidateDTO1.setId(SEARCH_RESULT_SKILL_ONE_ONE);
                 Candidate candidateDTO2 = new Candidate();
-                candidateDTO2.setId(6);
+                candidateDTO2.setId(SEARCH_RESULT_SKILL_ONE_TWO);
                 Candidate candidateDTO3 = new Candidate();
-                candidateDTO3.setId(7);
+                candidateDTO3.setId(SEARCH_RESULT_SKILL_ONE_THREE);
                 Candidate candidateDTO4 = new Candidate();
-                candidateDTO4.setId(10);
+                candidateDTO4.setId(SEARCH_RESULT_SKILL_ONE_FOUR);
                 dtos.add(candidateDTO1);
                 dtos.add(candidateDTO2);
                 dtos.add(candidateDTO3);
@@ -108,9 +110,9 @@ public class TestUtils {
                 return dtos;
             }else{
                 Candidate candidateDTO1 = new Candidate();
-                candidateDTO1.setId(1);
+                candidateDTO1.setId(SEARCH_RESULT_SKILL_ONE_ONE);
                 Candidate candidateDTO2 = new Candidate();
-                candidateDTO2.setId(6);
+                candidateDTO2.setId(SEARCH_RESULT_SKILL_ONE_TWO);
                 dtos.add(candidateDTO1);
                 dtos.add(candidateDTO2);
                 return dtos;
@@ -124,9 +126,9 @@ public class TestUtils {
         CandidateDTO dto = new CandidateDTO();
         dto.setId(1);
         dto.setSkills(new ArrayList<>());
-        dto.setFullName("test full name");
-        dto.setEmail("test email");
-        dto.setContactNumber("test contact number");
+        dto.setFullName(NEW_CANDIDATE_NAME);
+        dto.setEmail(NEW_CANDIDATE_EMAIL);
+        dto.setContactNumber(NEW_CANDIDATE_CONTACT_NUMBER);
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         try{
             Date newDate = formatter.parse(formatter.format(new Date()));
@@ -139,7 +141,7 @@ public class TestUtils {
 
     public static Candidate generateCandidateUpdated(CandidateDTO candidateToUpdate) {
         Candidate candidate = new Candidate();
-        candidate.setId(1);
+        candidate.setId(NEW_CANDIDATE_UPDATED_ID);
         candidate.setSkillSet(new HashSet<>());
         candidate.setContactNumber(candidateToUpdate.getContactNumber());
         candidate.setDateOfBirth(candidateToUpdate.getDateOfBirth());
@@ -159,13 +161,13 @@ public class TestUtils {
 
     public static SkillDTO generateSkillToSave() {
         SkillDTO dto = new SkillDTO();
-        dto.setName("New skill");
+        dto.setName(NEW_SKILL_NAME);
         return dto;
     }
 
     public static Skill generateSkillSaved(SkillDTO skillToSave) {
         Skill skill = new Skill();
-        skill.setId(21);
+        skill.setId(NEW_SKILL_SAVED_ID);
         skill.setName(skillToSave.getName());
         return skill;
     }
@@ -190,15 +192,15 @@ public class TestUtils {
 
     public static List<Candidate> generateCandidatesBySkill(String s) {
         List<Candidate> candidates = new ArrayList<>();
-        if(s.equals("java")){
+        if(s.equals(GENERATE_CANDIDATES_BY_SKILLS_ONE)){
             Candidate c1 = new Candidate();
-            c1.setId(1);
+            c1.setId(CANDIDATE_BY_SKILL_JAVA_ONE);
             Candidate c2 = new Candidate();
-            c2.setId(6);
+            c2.setId(CANDIDATE_BY_SKILL_JAVA_TWO);
             Candidate c3 = new Candidate();
-            c3.setId(7);
+            c3.setId(CANDIDATE_BY_SKILL_JAVA_THREE);
             Candidate c4 = new Candidate();
-            c4.setId(10);
+            c4.setId(CANDIDATE_BY_SKILL_JAVA_FOUR);
             candidates.add(c1);
             candidates.add(c2);
             candidates.add(c3);
@@ -206,9 +208,9 @@ public class TestUtils {
             return candidates;
         }else{
             Candidate c1 = new Candidate();
-            c1.setId(1);
+            c1.setId(CANDIDATE_BY_SKILL_CSHARP_ONE);
             Candidate c2 = new Candidate();
-            c2.setId(6);
+            c2.setId(CANDIDATE_BY_SKILL_CSHARP_TWO);
             candidates.add(c1);
             candidates.add(c2);
             return candidates;
