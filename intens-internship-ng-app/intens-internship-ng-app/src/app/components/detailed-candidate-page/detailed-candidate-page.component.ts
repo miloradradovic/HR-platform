@@ -224,7 +224,7 @@ export class DetailedCandidatePageComponent implements OnInit {
         this.router.navigate(['/']);
       },
       error => {
-        this.snackBar.open('Something went wrong!', 'Ok', {duration: 2000});
+        this.snackBar.open('One of the changed fields is not unique!', 'Ok', {duration: 2000});
       }
     );
   }

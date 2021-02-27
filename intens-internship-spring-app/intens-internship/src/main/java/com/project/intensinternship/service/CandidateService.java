@@ -70,10 +70,10 @@ public class CandidateService implements ServiceInterface<Candidate> {
         if(candidate == null){
             return null;
         }
-        if (candidate.getContactNumber().equals(entity.getContactNumber()) || candidate.getEmail().equals(entity.getEmail())){ // if unique data wasn't changed
+        if (candidate.getContactNumber().equals(entity.getContactNumber()) && candidate.getEmail().equals(entity.getEmail())){ // if unique data wasn't changed
             candidateEmail = null;
             candidateContactNumber = null;
-        }else if(!candidate.getEmail().equals(entity.getEmail()) && candidate.getContactNumber().equals(entity.getEmail())){ // if email was changed
+        }else if(!candidate.getEmail().equals(entity.getEmail()) && candidate.getContactNumber().equals(entity.getContactNumber())){ // if email was changed
             candidateEmail = candidateRepository.findByEmail(entity.getEmail());
             candidateContactNumber = null;
         }else if(candidate.getEmail().equals(entity.getEmail()) && !candidate.getContactNumber().equals(entity.getContactNumber())){ // if contact number was changed

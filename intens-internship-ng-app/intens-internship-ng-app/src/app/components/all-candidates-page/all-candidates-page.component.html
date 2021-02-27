@@ -30,7 +30,10 @@
 </div>
 
 <div style="padding-left:30%;float: left;padding-top: 1%;width:40%">
-
+  <button mat-raised-button
+          matTooltip="Double click to see the candidate details!">
+    <mat-icon [ngStyle]="{'color':'white'}">info</mat-icon>
+  </button>
   <app-table (DoubleClick)="goToDetailed($event)" (Delete)="onDelete($event)" [dataSource]="candidates" [columnsToDisplay]="['Email', 'Full Name', 'Contact number', 'Delete']"
              [columnsToIterate]="['email', 'fullName', 'contactNumber']"></app-table>
 

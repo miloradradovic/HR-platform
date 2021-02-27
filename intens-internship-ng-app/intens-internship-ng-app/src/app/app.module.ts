@@ -28,6 +28,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatNativeDateModule} from '@angular/material/core';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [
@@ -40,28 +41,29 @@ import {MatNativeDateModule} from '@angular/material/core';
     AllSkillsPageComponent,
     NavigationComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatTableModule,
-    MatButtonModule,
-    RouterModule.forRoot(routes),
-    MatMenuModule,
-    MatToolbarModule,
-    MatIconModule,
-    MatPaginatorModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatSnackBarModule,
-    MatInputModule,
-    MatPaginatorModule,
-    HttpClientModule,
-    MatDatepickerModule,
-    MatAutocompleteModule,
-    MatNativeDateModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatTableModule,
+        MatButtonModule,
+        RouterModule.forRoot(routes),
+        MatMenuModule,
+        MatToolbarModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatSnackBarModule,
+        MatInputModule,
+        MatPaginatorModule,
+        HttpClientModule,
+        MatDatepickerModule,
+        MatAutocompleteModule,
+        MatNativeDateModule,
+        MatTooltipModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })
