@@ -32,8 +32,25 @@ public class CandidateDTO {
         this.skills = new ArrayList<>();
     }
 
-    public CandidateDTO(){
+    public CandidateDTO(String fullName, Date dateOfBirth, String contactNumber, String email, ArrayList<String> skills) {
+        this.fullName = fullName;
+        this.dateOfBirth = dateOfBirth;
+        this.contactNumber = contactNumber;
+        this.email = email;
+        this.skills = skills;
+    }
 
+    public CandidateDTO(){
+        this.skills = new ArrayList<>();
+    }
+
+    public CandidateDTO(int updateCandidateIdValid, String updateCandidateName, Date date, String updateCandidateContactNumberValid, String updateCandidateEmailValid, ArrayList<String> es) {
+        this.id = updateCandidateIdValid;
+        this.fullName = updateCandidateName;
+        this.dateOfBirth = date;
+        this.contactNumber = updateCandidateContactNumberValid;
+        this.email = updateCandidateEmailValid;
+        this.skills = es;
     }
 
     public int getId() {

@@ -1,0 +1,1 @@
+DELETE FROM candidates where email = 'newemail@email.com';

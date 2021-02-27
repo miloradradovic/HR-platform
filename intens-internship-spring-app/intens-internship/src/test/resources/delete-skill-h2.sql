@@ -1,0 +1,1 @@
+DELETE FROM skills where name = 'New skill';

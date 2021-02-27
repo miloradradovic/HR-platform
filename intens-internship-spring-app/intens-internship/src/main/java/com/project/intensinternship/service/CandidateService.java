@@ -6,6 +6,8 @@ import com.project.intensinternship.model.Skill;
 import com.project.intensinternship.repository.CandidateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -155,6 +157,7 @@ public class CandidateService implements ServiceInterface<Candidate> {
         return false;
     }
 
+    @Transactional
     public boolean removeSkill(int candidateId, Integer skillId) {
         Candidate found = candidateRepository.findById(candidateId);
         int sizeBefore;

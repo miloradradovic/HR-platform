@@ -5,6 +5,7 @@ import com.project.intensinternship.model.Skill;
 import com.project.intensinternship.repository.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -53,6 +54,7 @@ public class SkillService implements ServiceInterface<Skill> {
     }
 
     @Override
+    @Transactional
     public boolean delete(int id) {
         Skill found = skillRepository.findById(id);
         if(found == null){
