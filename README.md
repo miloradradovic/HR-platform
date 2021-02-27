@@ -17,8 +17,8 @@
 
 # Additional
   - Tests
-      - Service and api layer are covered in JUnit tests and they are all listed in SuiteAll. 
-      - By running SuiteAll all tests will start working.
+      - Service and api layer are covered in JUnit and integration tests and they are all listed in SuiteAll. 
+      - By starting SuiteAll up all tests will start running.
 
   - Swagger
       - Integrated into Spring Boot application.
