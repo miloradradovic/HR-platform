@@ -35,7 +35,7 @@ export class AddSkillPageComponent implements OnInit {
         this.router.navigate(['/skills']);
       },
       error => {
-        this.snackBar.open('Name must be unique!', 'Ok', {duration: 2000});
+        this.snackBar.open('Skill with that name already exists!', 'Ok', {duration: 2000});
       }
     );
   }

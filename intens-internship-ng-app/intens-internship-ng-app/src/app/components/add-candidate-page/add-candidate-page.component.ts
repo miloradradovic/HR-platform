@@ -94,7 +94,7 @@ export class AddCandidatePageComponent implements OnInit {
           this.router.navigate(['/']);
         },
         error => {
-          this.snackBar.open('One of the fields is not unique!', 'Ok', {duration: 2000});
+          this.snackBar.open('Candidate with that email and/or contact number already exists!', 'Ok', {duration: 2000});
         }
       );
     }

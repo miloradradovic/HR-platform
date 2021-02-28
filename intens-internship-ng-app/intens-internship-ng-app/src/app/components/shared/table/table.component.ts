@@ -1,11 +1,11 @@
-import {Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class TableComponent implements OnInit, OnChanges {
+export class TableComponent {
 
   @Input() dataSource = [];
   @Input() columnsToDisplay = [];
@@ -15,30 +15,6 @@ export class TableComponent implements OnInit, OnChanges {
   @Output() Delete = new EventEmitter<number>();
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    for (const propName in changes) {
-      if (changes.hasOwnProperty(propName)){
-        let vary = this.get(propName);
-        vary = changes[propName].currentValue;
-      }
-    }
-  }
-
-  get(element: string): string[] {
-    switch (element) {
-      case 'dataSource':
-        return this.dataSource;
-      case 'columnsToDisplay':
-        return this.columnsToDisplay;
-      default:
-        return this.columnsToIterate;
-    }
-  }
-
 
   clicked(id): void {
     this.Click.emit(id);
